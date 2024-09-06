@@ -53,7 +53,7 @@ const dialogues = [
     }
 ];
 
-let currentStep = 0;
+let currentStep = 0; // Conta as etapas do jogo
 
 function updateDialogue() {
     const dialogue = dialogues[currentStep];
@@ -62,9 +62,9 @@ function updateDialogue() {
     document.getElementById('choice2').textContent = dialogue.choices[1];
     document.getElementById('choice3').textContent = dialogue.choices[2];
     
-    if (currentStep === dialogues.length - 1) {
+    if (currentStep < dialogues.length - 1) {
         document.getElementById('reset-button').style.display = 'block';
-        document.getElementById('choices-container').style.display = 'none';
+        /* document.getElementById('choices-container').style.display = 'none'; */
     }
 }
 
@@ -73,24 +73,30 @@ function makeChoice(choiceIndex) {
     const response = dialogue.responses[choiceIndex];
     document.getElementById('dialogue-text').textContent = response;
     
-    //if (response.includes("Leonardo confessa que também tem sentimentos por você.") || response.includes("Leonardo está feliz em continuar se conhecendo e ver onde isso leva.")) {
-        //showConfetti();
-    }
+/*     if (response.includes("Leonardo confessa que também tem sentimentos por você.") || response.includes("Leonardo está feliz em continuar se conhecendo e ver onde isso leva.")) {
+        showConfetti();
+        console.log("Acabou o jogo");
+    } */
 
     currentStep++;
     
-    if (currentStep < dialogues.length) {
-        setTimeout(updateDialogue, 2000); // Espera 2 segundos antes de mostrar a próxima pergunta
+    if (!(currentStep == dialogues.length)) {
+        setTimeout(updateDialogue, 3500); // Espera 2 segundos antes de mostrar a próxima pergunta
     } else {
-        console.log ("cabo")
+        showConfetti();
+        createHearts();
+        endGame();
     }
 
+}
 
+// Acaba o jogo
 function endGame() {
     document.getElementById('choices-container').style.display = 'none';
     document.getElementById('reset-button').style.display = 'block';
 }
 
+// Reseta o jogo
 function resetGame() {
     currentStep = 0;
     document.getElementById('dialogue-text').textContent = "Bem-vindo ao jogo! Clique no botão abaixo para começar.";
@@ -100,21 +106,25 @@ function resetGame() {
     document.getElementById('start-screen').style.display = 'block';
 }
 
+// Starta o jogo
 function startGame() {
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('game-container').style.display = 'block';
     updateDialogue();
 }
 
-// Função para criar corações caindo
+// Função para criar corações na tela
 function createHearts() {
     const container = document.getElementById('hearts-container');
-    for (let i = 0; i < 30; i++) {
+    container.innerHTML = '';
+    for (let i = 0; i < 100; i++) {
         const heart = document.createElement('div');
         heart.className = 'heart';
         heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        heart.style.animationDelay = Math.random() * 5 + 's';
+        heart.style.top = Math.random() * 100 + 'vh';
+        heart.style.width = Math.random() * 10 + 5 + 'px';
+        heart.style.height = heart.style.width;
+        heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
         container.appendChild(heart);
     }
 }
@@ -134,5 +144,3 @@ function showConfetti() {
         container.appendChild(confetti);
     }
 }
-
-createHearts();
